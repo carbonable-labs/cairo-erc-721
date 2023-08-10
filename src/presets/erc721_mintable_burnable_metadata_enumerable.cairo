@@ -8,7 +8,9 @@ mod ERC721 {
     use cairo_erc_721::extensions::metadata::module::ERC721Metadata;
     use cairo_erc_721::extensions::metadata::interface::{IERC721Metadata, IERC721MetadataLegacy};
     use cairo_erc_721::extensions::enumerable::module::ERC721Enumerable;
-    use cairo_erc_721::extensions::enumerable::interface::{IERC721Enumerable, IERC721EnumerableLegacy};
+    use cairo_erc_721::extensions::enumerable::interface::{
+        IERC721Enumerable, IERC721EnumerableLegacy
+    };
 
     #[storage]
     struct Storage {}
@@ -84,7 +86,9 @@ mod ERC721 {
             data: Span<felt252>
         ) {
             let mut unsafe_state = ERC721Enumerable::unsafe_new_contract_state();
-            ERC721Enumerable::InternalImpl::safe_transfer_from(ref unsafe_state, from, to, token_id, data)
+            ERC721Enumerable::InternalImpl::safe_transfer_from(
+                ref unsafe_state, from, to, token_id, data
+            )
         }
     }
 
@@ -108,9 +112,7 @@ mod ERC721 {
             self.is_approved_for_all(owner, operator)
         }
 
-        fn setApprovalForAll(
-            ref self: ContractState, operator: ContractAddress, approved: bool
-        ) {
+        fn setApprovalForAll(ref self: ContractState, operator: ContractAddress, approved: bool) {
             self.set_approval_for_all(operator, approved)
         }
 
@@ -193,7 +195,9 @@ mod ERC721 {
             self: @ContractState, owner: ContractAddress, index: u256
         ) -> u256 {
             let unsafe_state = ERC721Enumerable::unsafe_new_contract_state();
-            ERC721Enumerable::ERC721EnumerableImpl::token_of_owner_by_index(@unsafe_state, owner, index)
+            ERC721Enumerable::ERC721EnumerableImpl::token_of_owner_by_index(
+                @unsafe_state, owner, index
+            )
         }
     }
 
@@ -207,9 +211,7 @@ mod ERC721 {
             self.token_by_index(index)
         }
 
-        fn tokenOfOwnerByIndex(
-            self: @ContractState, owner: ContractAddress, index: u256
-        ) -> u256 {
+        fn tokenOfOwnerByIndex(self: @ContractState, owner: ContractAddress, index: u256) -> u256 {
             self.token_of_owner_by_index(owner, index)
         }
     }

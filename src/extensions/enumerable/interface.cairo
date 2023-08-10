@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-const IERC721_ENUMERABLE_ID : felt252 = 0x780e9d63;
+const IERC721_ENUMERABLE_ID: felt252 = 0x780e9d63;
 
 #[starknet::interface]
 trait IERC721Enumerable<TContractState> {

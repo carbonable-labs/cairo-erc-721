@@ -24,7 +24,9 @@ mod ERC721Metadata {
 
         fn token_uri(self: @ContractState, token_id: u256) -> felt252 {
             let unsafe_state = ERC721::unsafe_new_contract_state();
-            assert(ERC721::InternalImpl::_exists(@unsafe_state, token_id), 'ERC721: invalid token ID');
+            assert(
+                ERC721::InternalImpl::_exists(@unsafe_state, token_id), 'ERC721: invalid token ID'
+            );
             self._token_uri.read(token_id)
         }
     }

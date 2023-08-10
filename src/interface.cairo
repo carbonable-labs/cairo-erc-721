@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-const IERC721_ID : felt252 = 0x80ac58cd;
+const IERC721_ID: felt252 = 0x80ac58cd;
 
 #[starknet::interface]
 trait IERC721<TContractState> {

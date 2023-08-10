@@ -106,9 +106,7 @@ mod ERC721 {
             self.is_approved_for_all(owner, operator)
         }
 
-        fn setApprovalForAll(
-            ref self: ContractState, operator: ContractAddress, approved: bool
-        ) {
+        fn setApprovalForAll(ref self: ContractState, operator: ContractAddress, approved: bool) {
             self.set_approval_for_all(operator, approved)
         }
 

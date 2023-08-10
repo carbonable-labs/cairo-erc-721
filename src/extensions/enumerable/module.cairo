@@ -8,7 +8,9 @@ mod ERC721Enumerable {
     use starknet::ContractAddress;
     use cairo_erc_721::src5::module::SRC5;
     use cairo_erc_721::module::ERC721;
-    use cairo_erc_721::extensions::enumerable::interface::{IERC721_ENUMERABLE_ID, IERC721Enumerable};
+    use cairo_erc_721::extensions::enumerable::interface::{
+        IERC721_ENUMERABLE_ID, IERC721Enumerable
+    };
 
     #[storage]
     struct Storage {
@@ -43,9 +45,7 @@ mod ERC721Enumerable {
     impl InternalImpl of InternalTrait {
         fn initializer(ref self: ContractState) {
             let mut unsafe_state = SRC5::unsafe_new_contract_state();
-            SRC5::InternalImpl::register_interface(
-                ref unsafe_state, IERC721_ENUMERABLE_ID
-            );
+            SRC5::InternalImpl::register_interface(ref unsafe_state, IERC721_ENUMERABLE_ID);
         }
 
         fn transfer_from(
