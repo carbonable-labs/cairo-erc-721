@@ -9,5 +9,5 @@ trait IERC721Metadata<TContractState> {
 
 #[starknet::interface]
 trait IERC721MetadataLegacy<TContractState> {
-    fn tokenUri(self: @TContractState, tokenId: u256) -> felt252;
+    fn tokenURI(self: @TContractState, tokenId: u256) -> felt252;
 }

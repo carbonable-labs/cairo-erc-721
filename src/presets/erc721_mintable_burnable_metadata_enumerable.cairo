@@ -1,14 +1,14 @@
 #[starknet::contract]
 mod ERC721 {
     use starknet::{get_caller_address, ContractAddress};
-    use cairo_erc_721::src5::interface::ISRC5;
+    use cairo_erc_721::src5::interface::{ISRC5, ISRC5Legacy};
     use cairo_erc_721::src5::module::SRC5;
     use cairo_erc_721::module::ERC721;
-    use cairo_erc_721::interface::{IERC721, IERC721Mintable, IERC721Burnable};
+    use cairo_erc_721::interface::{IERC721, IERC721Legacy, IERC721Mintable, IERC721Burnable};
     use cairo_erc_721::extensions::metadata::module::ERC721Metadata;
-    use cairo_erc_721::extensions::metadata::interface::IERC721Metadata;
+    use cairo_erc_721::extensions::metadata::interface::{IERC721Metadata, IERC721MetadataLegacy};
     use cairo_erc_721::extensions::enumerable::module::ERC721Enumerable;
-    use cairo_erc_721::extensions::enumerable::interface::IERC721Enumerable;
+    use cairo_erc_721::extensions::enumerable::interface::{IERC721Enumerable, IERC721EnumerableLegacy};
 
     #[storage]
     struct Storage {}
@@ -23,6 +23,13 @@ mod ERC721 {
         fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
             let unsafe_state = SRC5::unsafe_new_contract_state();
             SRC5::SRC5Impl::supports_interface(@unsafe_state, interface_id)
+        }
+    }
+
+    #[external(v0)]
+    impl SRC5LegacyImpl of ISRC5Legacy<ContractState> {
+        fn supportsInterface(self: @ContractState, interfaceId: felt252) -> bool {
+            self.supports_interface(interfaceId)
         }
     }
 
@@ -82,6 +89,49 @@ mod ERC721 {
     }
 
     #[external(v0)]
+    impl ERC721LegacyImpl of IERC721Legacy<ContractState> {
+        fn balanceOf(self: @ContractState, account: ContractAddress) -> u256 {
+            self.balance_of(account)
+        }
+
+        fn ownerOf(self: @ContractState, tokenId: u256) -> ContractAddress {
+            self.owner_of(tokenId)
+        }
+
+        fn getApproved(self: @ContractState, tokenId: u256) -> ContractAddress {
+            self.get_approved(tokenId)
+        }
+
+        fn isApprovedForAll(
+            self: @ContractState, owner: ContractAddress, operator: ContractAddress
+        ) -> bool {
+            self.is_approved_for_all(owner, operator)
+        }
+
+        fn setApprovalForAll(
+            ref self: ContractState, operator: ContractAddress, approved: bool
+        ) {
+            self.set_approval_for_all(operator, approved)
+        }
+
+        fn transferFrom(
+            ref self: ContractState, from: ContractAddress, to: ContractAddress, tokenId: u256
+        ) {
+            self.transfer_from(from, to, tokenId)
+        }
+
+        fn safeTransferFrom(
+            ref self: ContractState,
+            from: ContractAddress,
+            to: ContractAddress,
+            tokenId: u256,
+            data: Span<felt252>
+        ) {
+            self.safe_transfer_from(from, to, tokenId, data)
+        }
+    }
+
+    #[external(v0)]
     impl ERC721MintableImpl of IERC721Mintable<ContractState> {
         fn mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
             let mut unsafe_state = ERC721Enumerable::unsafe_new_contract_state();
@@ -121,6 +171,13 @@ mod ERC721 {
     }
 
     #[external(v0)]
+    impl ERC721MetadataLegacyImpl of IERC721MetadataLegacy<ContractState> {
+        fn tokenURI(self: @ContractState, tokenId: u256) -> felt252 {
+            self.token_uri(tokenId)
+        }
+    }
+
+    #[external(v0)]
     impl ERC721EnumerableImpl of IERC721Enumerable<ContractState> {
         fn total_supply(self: @ContractState) -> u256 {
             let unsafe_state = ERC721Enumerable::unsafe_new_contract_state();
@@ -137,6 +194,23 @@ mod ERC721 {
         ) -> u256 {
             let unsafe_state = ERC721Enumerable::unsafe_new_contract_state();
             ERC721Enumerable::ERC721EnumerableImpl::token_of_owner_by_index(@unsafe_state, owner, index)
+        }
+    }
+
+    #[external(v0)]
+    impl ERC721EnumerableLegacyImpl of IERC721EnumerableLegacy<ContractState> {
+        fn totalSupply(self: @ContractState) -> u256 {
+            self.total_supply()
+        }
+
+        fn tokenByIndex(self: @ContractState, index: u256) -> u256 {
+            self.token_by_index(index)
+        }
+
+        fn tokenOfOwnerByIndex(
+            self: @ContractState, owner: ContractAddress, index: u256
+        ) -> u256 {
+            self.token_of_owner_by_index(owner, index)
         }
     }
 

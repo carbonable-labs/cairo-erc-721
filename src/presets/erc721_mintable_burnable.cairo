@@ -1,10 +1,10 @@
 #[starknet::contract]
 mod ERC721 {
     use starknet::{get_caller_address, ContractAddress};
-    use cairo_erc_721::src5::interface::ISRC5;
+    use cairo_erc_721::src5::interface::{ISRC5, ISRC5Legacy};
     use cairo_erc_721::src5::module::SRC5;
     use cairo_erc_721::module::ERC721;
-    use cairo_erc_721::interface::{IERC721, IERC721Mintable, IERC721Burnable};
+    use cairo_erc_721::interface::{IERC721, IERC721Legacy, IERC721Mintable, IERC721Burnable};
 
     #[storage]
     struct Storage {}
@@ -19,6 +19,13 @@ mod ERC721 {
         fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
             let unsafe_state = SRC5::unsafe_new_contract_state();
             SRC5::SRC5Impl::supports_interface(@unsafe_state, interface_id)
+        }
+    }
+
+    #[external(v0)]
+    impl SRC5LegacyImpl of ISRC5Legacy<ContractState> {
+        fn supportsInterface(self: @ContractState, interfaceId: felt252) -> bool {
+            self.supports_interface(interfaceId)
         }
     }
 
@@ -74,6 +81,49 @@ mod ERC721 {
         ) {
             let mut unsafe_state = ERC721::unsafe_new_contract_state();
             ERC721::ERC721Impl::safe_transfer_from(ref unsafe_state, from, to, token_id, data)
+        }
+    }
+
+    #[external(v0)]
+    impl ERC721LegacyImpl of IERC721Legacy<ContractState> {
+        fn balanceOf(self: @ContractState, account: ContractAddress) -> u256 {
+            self.balance_of(account)
+        }
+
+        fn ownerOf(self: @ContractState, tokenId: u256) -> ContractAddress {
+            self.owner_of(tokenId)
+        }
+
+        fn getApproved(self: @ContractState, tokenId: u256) -> ContractAddress {
+            self.get_approved(tokenId)
+        }
+
+        fn isApprovedForAll(
+            self: @ContractState, owner: ContractAddress, operator: ContractAddress
+        ) -> bool {
+            self.is_approved_for_all(owner, operator)
+        }
+
+        fn setApprovalForAll(
+            ref self: ContractState, operator: ContractAddress, approved: bool
+        ) {
+            self.set_approval_for_all(operator, approved)
+        }
+
+        fn transferFrom(
+            ref self: ContractState, from: ContractAddress, to: ContractAddress, tokenId: u256
+        ) {
+            self.transfer_from(from, to, tokenId)
+        }
+
+        fn safeTransferFrom(
+            ref self: ContractState,
+            from: ContractAddress,
+            to: ContractAddress,
+            tokenId: u256,
+            data: Span<felt252>
+        ) {
+            self.safe_transfer_from(from, to, tokenId, data)
         }
     }
 
