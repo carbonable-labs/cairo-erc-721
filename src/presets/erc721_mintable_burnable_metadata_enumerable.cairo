@@ -19,6 +19,14 @@ mod ERC721 {
     }
 
     #[external(v0)]
+    impl SRC5Impl of ISRC5<ContractState> {
+        fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
+            let unsafe_state = SRC5::unsafe_new_contract_state();
+            SRC5::SRC5Impl::supports_interface(@unsafe_state, interface_id)
+        }
+    }
+
+    #[external(v0)]
     impl ERC721Impl of IERC721<ContractState> {
         fn balance_of(self: @ContractState, account: ContractAddress) -> u256 {
             let unsafe_state = ERC721::unsafe_new_contract_state();
